@@ -2,15 +2,13 @@
 
 This project is an NFT marketplace where users can list ERC1155 NFTs for sale, buy listed NFTs, and make offers on listed NFTs.
 
-````
-
 ## Setup
 
 1. **Install dependencies**:
 
 ```sh
 npm install
-````
+```
 
 2. **Configure environment variables**:
 
