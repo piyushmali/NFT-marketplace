@@ -1,98 +1,113 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTMarketplace is Ownable, ERC1155Holder {
+contract NFTMarketplace is Ownable {
     struct Listing {
         uint256 price;
         address seller;
-        bool isActive;
     }
 
     struct Offer {
         uint256 offerPrice;
         address offerer;
-        bool isActive;
     }
 
-    IERC1155 public nftContract;
-    mapping(uint256 => Listing) public listings;
-    mapping(uint256 => Offer) public offers;
+    mapping(address => mapping(uint256 => Listing)) public listings;
+    mapping(address => mapping(uint256 => Offer)) public offers;
 
-    event Listed(uint256 tokenId, uint256 price, address seller);
-    event Bought(uint256 tokenId, uint256 price, address buyer);
-    event OfferMade(uint256 tokenId, uint256 offerPrice, address offerer);
-    event OfferAccepted(uint256 tokenId, uint256 offerPrice, address offerer);
-    event ListingCancelled(uint256 tokenId, address seller);
+    event NFTListed(
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        uint256 price,
+        address seller
+    );
+    event NFTBought(
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        uint256 price,
+        address buyer
+    );
+    event OfferMade(
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        uint256 offerPrice,
+        address offerer
+    );
+    event OfferAccepted(
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        uint256 offerPrice,
+        address buyer
+    );
+    event ListingCancelled(
+        address indexed nftContract,
+        uint256 indexed tokenId,
+        address seller
+    );
 
-    constructor(address _nftContract) {
-        nftContract = IERC1155(_nftContract);
+    constructor() Ownable(msg.sender) {}
+
+    function listNFT(
+        address nftContract,
+        uint256 tokenId,
+        uint256 price
+    ) external {
+        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        listings[nftContract][tokenId] = Listing(price, msg.sender);
+        emit NFTListed(nftContract, tokenId, price, msg.sender);
     }
 
-    function listNFT(uint256 tokenId, uint256 price) public {
-        require(
-            nftContract.balanceOf(msg.sender, tokenId) > 0,
-            "You don't own this token"
-        );
-        nftContract.safeTransferFrom(msg.sender, address(this), tokenId, 1, "");
-        listings[tokenId] = Listing(price, msg.sender, true);
-        emit Listed(tokenId, price, msg.sender);
-    }
+    function buyNFT(address nftContract, uint256 tokenId) external payable {
+        Listing memory listing = listings[nftContract][tokenId];
+        require(msg.value >= listing.price, "Not enough funds to buy NFT");
 
-    function buyNFT(uint256 tokenId) public payable {
-        Listing memory listing = listings[tokenId];
-        require(listing.isActive, "Listing is not active");
-        require(msg.value >= listing.price, "Insufficient payment");
-
-        delete listings[tokenId];
-        nftContract.safeTransferFrom(address(this), msg.sender, tokenId, 1, "");
         payable(listing.seller).transfer(listing.price);
-        emit Bought(tokenId, listing.price, msg.sender);
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
+        delete listings[nftContract][tokenId];
+        emit NFTBought(nftContract, tokenId, listing.price, msg.sender);
     }
 
-    function makeOffer(uint256 tokenId) public payable {
-        require(msg.value > 0, "Offer price must be greater than zero");
-        offers[tokenId] = Offer(msg.value, msg.sender, true);
-        emit OfferMade(tokenId, msg.value, msg.sender);
+    function makeOffer(address nftContract, uint256 tokenId) external payable {
+        offers[nftContract][tokenId] = Offer(msg.value, msg.sender);
+        emit OfferMade(nftContract, tokenId, msg.value, msg.sender);
     }
 
-    function acceptOffer(uint256 tokenId) public {
-        Listing memory listing = listings[tokenId];
-        Offer memory offer = offers[tokenId];
+    function acceptOffer(address nftContract, uint256 tokenId) external {
+        Offer memory offer = offers[nftContract][tokenId];
+        Listing memory listing = listings[nftContract][tokenId];
+        require(msg.sender == listing.seller, "Only seller can accept offer");
 
-        require(listing.isActive, "Listing is not active");
-        require(offer.isActive, "Offer is not active");
-        require(
-            msg.sender == listing.seller,
-            "Only the seller can accept the offer"
-        );
-
-        delete listings[tokenId];
-        delete offers[tokenId];
-        nftContract.safeTransferFrom(
+        payable(listing.seller).transfer(offer.offerPrice);
+        IERC721(nftContract).transferFrom(
             address(this),
             offer.offerer,
-            tokenId,
-            1,
-            ""
+            tokenId
         );
-        payable(listing.seller).transfer(offer.offerPrice);
-        emit OfferAccepted(tokenId, offer.offerPrice, offer.offerer);
+
+        delete offers[nftContract][tokenId];
+        delete listings[nftContract][tokenId];
+        emit OfferAccepted(
+            nftContract,
+            tokenId,
+            offer.offerPrice,
+            offer.offerer
+        );
     }
 
-    function cancelListing(uint256 tokenId) public {
-        Listing memory listing = listings[tokenId];
-        require(listing.isActive, "Listing is not active");
-        require(
-            msg.sender == listing.seller,
-            "Only the seller can cancel the listing"
-        );
+    function cancelListing(address nftContract, uint256 tokenId) external {
+        Listing memory listing = listings[nftContract][tokenId];
+        require(msg.sender == listing.seller, "Only seller can cancel listing");
 
-        delete listings[tokenId];
-        nftContract.safeTransferFrom(address(this), msg.sender, tokenId, 1, "");
-        emit ListingCancelled(tokenId, msg.sender);
+        IERC721(nftContract).transferFrom(
+            address(this),
+            listing.seller,
+            tokenId
+        );
+        delete listings[nftContract][tokenId];
+        emit ListingCancelled(nftContract, tokenId, listing.seller);
     }
 }
