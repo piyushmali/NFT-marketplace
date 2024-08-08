@@ -1,59 +1,58 @@
 # NFT Marketplace
 
-## Overview
-
-A decentralized marketplace for trading NFTs. Built with Solidity for smart contracts and Hardhat for deployment and testing.
-
-## Features
-
-- **ERC721-based NFTs**: Mint and trade ERC721 tokens.
-- **Marketplace**: List, buy, and make offers on NFTs.
-- **Ownership**: Only sellers can cancel listings and accept offers.
-
-## Smart Contracts
-
-### `MyNFT.sol`
-
-- **Mint NFTs**: Create new NFTs with metadata.
-- **Inherits**: `ERC721URIStorage`, `Ownable`.
-
-### `NFTMarketplace.sol`
-
-- **List NFTs**: Put NFTs up for sale.
-- **Buy NFTs**: Purchase listed NFTs.
-- **Offers**: Make and accept offers on NFTs.
-- **Cancel Listings**: Remove NFTs from sale.
-
-## Deployment
-
-1. **Compile Contracts**:
-
-   ```bash
-   npx hardhat compile
-   ```
-
-2. **Deploy Contracts**:
-
-   ```bash
-   npx hardhat run scripts/deploy_NFTMarketplace.js --network <network_name>
-   ```
-
-   Replace `<network_name>` with your desired network (e.g., `amoy`).
-
-## Testing
-
-Run tests using Hardhat:
-
-```bash
-npx hardhat test
-```
+A decentralized marketplace for trading ERC721 NFTs.
 
 ## Requirements
 
 - Node.js
 - Hardhat
-- OpenZeppelin Contracts
+- dotenv
+
+## Setup
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/your-repo/NFT-marketplace.git
+   cd NFT-marketplace
+   ```
+
+2. Install dependencies:
+
+   ```sh
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add the following variables:
+   ```plaintext
+   AMOY_RPC_URL=<Your_Amoy_RPC_URL>
+   PRIVATE_KEY=<Your_Private_Key>
+   ```
+
+## Compile Contracts
+
+```sh
+npx hardhat compile
+```
+
+## Deploy Contracts
+
+```sh
+npx hardhat run scripts/deploy_NFTMarketplace.js --network amoy
+```
+
+## Test Contracts
+
+```sh
+npx hardhat test
+```
+
+## Project Structure
+
+- `contracts/`: Solidity contracts
+- `scripts/`: Deployment scripts
+- `test/`: Test scripts
 
 ## License
 
-MIT License
+MIT

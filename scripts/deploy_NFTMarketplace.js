@@ -8,6 +8,9 @@ async function main() {
 
     const nftMarketplace = await NFTMarketplace.deploy();
 
+    // Debugging: Check if deployTransaction is available
+    console.log("Deploy Transaction:", nftMarketplace.deployTransaction);
+
     await nftMarketplace.deployTransaction.wait();
 
     console.log("NFTMarketplace deployed to:", nftMarketplace.address);
