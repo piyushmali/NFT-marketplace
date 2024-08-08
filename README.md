@@ -13,7 +13,7 @@ A decentralized marketplace for trading ERC721 NFTs.
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your-repo/NFT-marketplace.git
+   git clone https://github.com/piyushmali/NFT-marketplace.git
    cd NFT-marketplace
    ```
 
