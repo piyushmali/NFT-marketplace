@@ -9,8 +9,6 @@ const NFTMarketplaceModule = buildModule("NFTMarketplaceModule", (m) => {
 module.exports = NFTMarketplaceModule;
 
 
-
-
 // MacBook-Air NFT-marketplace % npx hardhat ignition deploy ./ignition/modules/deploy_NFTMarketplace.js --network amoy
 
 // ✔ Confirm deploy to network amoy (80002)? … yes
