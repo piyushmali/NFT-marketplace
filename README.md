@@ -2,7 +2,8 @@
 
 **Deployed Addresses**
 
-- [NFT Marketplace Contract](https://www.oklink.com/amoy/address/0xd0f84d1194fd7a930072b1a54bf145e62ba99f53): `0xd0f84d1194fd7a930072b1a54bf145e62ba99f53`
+- [MyNFT Contract](https://amoy.polygonscan.com/address/0xdE7716eC9738330b0e05Eea6aB1F052fd0846864): `0xdE7716eC9738330b0e05Eea6aB1F052fd0846864`
+- [NFT Marketplace Contract](https://amoy.polygonscan.com/address/0x5eb8738ae8e23ea7c1d6e09e13037d87bb7f9466): `0x5Eb8738aE8E23EA7C1D6e09E13037D87bb7F9466`
 
 A decentralized marketplace for trading ERC721 NFTs.
 
