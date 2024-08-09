@@ -1,5 +1,9 @@
 # NFT Marketplace
 
+**Deployed Addresses**
+
+- [NFT Marketplace Contract](https://www.oklink.com/amoy/address/0xd0f84d1194fd7a930072b1a54bf145e62ba99f53): `0xd0f84d1194fd7a930072b1a54bf145e62ba99f53`
+
 A decentralized marketplace for trading ERC721 NFTs.
 
 ## Requirements
@@ -37,9 +41,17 @@ npx hardhat compile
 
 ## Deploy Contracts
 
-```sh
-npx hardhat run scripts/deploy_NFTMarketplace.js --network amoy
-```
+1. Deploy the MyNFT contract:
+
+   ```sh
+   npx hardhat ignition deploy ./ignition/modules/deploy_MyNFT.js --network amoy
+   ```
+
+2. Deploy the NFT Marketplace contract:
+
+   ```sh
+   npx hardhat ignition deploy ./ignition/modules/deploy_NFTMarketplace.js --network amoy
+   ```
 
 ## Test Contracts
 
