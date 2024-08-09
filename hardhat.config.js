@@ -1,28 +1,44 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
-require("@nomiclabs/hardhat-etherscan");
 
+/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.20",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
-    }
+    compilers: [
+      {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
+  },
+  sourcify: {
+    enabled: true,
   },
   networks: {
-    amoy: {
-      url: process.env.AMOY_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY]
+    polygonAmoy: {
+      url: process.env.RPC_URL,
+      accounts: [process.env.Privatekey],
     },
-    polygon: {
-      url: process.env.POLYGON_RPC_URL, 
-      accounts: [process.env.PRIVATE_KEY]
-    }
   },
   etherscan: {
-    apiKey: process.env.POLYGONSCAN_API_KEY 
-  }
+    apiKey: {
+      polygonAmoy: process.env.Oklink_APi_key,
+    },
+    customChains: [
+      {
+        network: "polygonAmoy",
+        chainId: 80002,
+        urls: {
+          apiURL: "https://www.oklink.com/api/explorer/v1/contract/verify/async/api/polygonAmoy",
+          browserURL: "https://www.oklink.com/amoy",
+        },
+      },
+    ],
+  },
 };
