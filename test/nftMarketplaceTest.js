@@ -5,12 +5,10 @@ describe("NFTMarketplace", function () {
     let MyNFT, myNFT, NFTMarketplace, nftMarketplace, owner, addr1, addr2;
 
     beforeEach(async function () {
-        // Deploy MyNFT contract
         MyNFT = await ethers.getContractFactory("MyNFT");
         myNFT = await MyNFT.deploy();
         await myNFT.deployed();
 
-        // Deploy NFTMarketplace contract
         NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
         nftMarketplace = await NFTMarketplace.deploy();
         await nftMarketplace.deployed();
@@ -25,18 +23,14 @@ describe("NFTMarketplace", function () {
         const tokenURI = "ipfs://token_uri";
         const price = ethers.parseEther("1");
 
-        // Create an NFT
         const tx = await myNFT.createNFT(tokenURI);
         const receipt = await tx.wait();
         const tokenId = receipt.events[0].args[0].toString();
 
-        // Approve the marketplace to transfer the NFT
         await myNFT.connect(owner).approve(nftMarketplace.address, tokenId);
         
-        // List the NFT on the marketplace
         await nftMarketplace.connect(owner).listNFT(myNFT.address, tokenId, price);
 
-        // Check the listing details
         const listing = await nftMarketplace.listings(myNFT.address, tokenId);
         expect(listing.price).to.equal(price);
         expect(listing.seller).to.equal(owner.address);
@@ -53,10 +47,8 @@ describe("NFTMarketplace", function () {
         await myNFT.connect(owner).approve(nftMarketplace.address, tokenId);
         await nftMarketplace.connect(owner).listNFT(myNFT.address, tokenId, price);
 
-        // Buy the NFT
         await nftMarketplace.connect(addr1).buyNFT(myNFT.address, tokenId, { value: price });
 
-        // Check the new owner
         const newOwner = await myNFT.ownerOf(tokenId);
         expect(newOwner).to.equal(addr1.address);
     });
@@ -121,13 +113,11 @@ describe("NFTMarketplace", function () {
     it("Should allow users to add and withdraw funds", async function () {
         const amountToAdd = ethers.parseEther("2");
 
-        // Add funds
         await nftMarketplace.connect(addr1).addFunds({ value: amountToAdd });
 
         const userFunds = await nftMarketplace.userFunds(addr1.address);
         expect(userFunds).to.equal(amountToAdd);
 
-        // Withdraw funds
         await nftMarketplace.connect(addr1).withdrawFunds();
 
         const userFundsAfterWithdraw = await nftMarketplace.userFunds(addr1.address);
