@@ -1,21 +1,25 @@
-const hre = require("hardhat");
+const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
-async function main() {
-    const [deployer] = await hre.ethers.getSigners();
-    console.log("Deploying contracts with the account:", deployer.address);
+const NFTMarketplaceModule = buildModule("NFTMarketplaceModule", (m) => {
+  const nFTMarketplace = m.contract("NFTMarketplace");
 
-    const NFTMarketplace = await hre.ethers.getContractFactory("NFTMarketplace");
+  return { nFTMarketplace };
+});
 
-    const nftMarketplace = await NFTMarketplace.deploy();
+module.exports = NFTMarketplaceModule;
 
-    await nftMarketplace.waitForDeployment();
+// Rahul@rahul-MacBook-Air NFT-marketplace % npx hardhat ignition deploy ./ignition/modules/deploy_NFTMarketplace.js --network amoy
 
-    console.log("NFTMarketplace deployed to:", nftMarketplace.address);
-}
+// ✔ Confirm deploy to network amoy (80002)? … yes
+// Hardhat Ignition 🚀
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+// Deploying [ NFTMarketplaceModule ]
+
+// Batch #1
+//   Executed NFTMarketplaceModule#NFTMarketplace
+
+// [ NFTMarketplaceModule ] successfully deployed 🚀
+
+// Deployed Addresses
+
+// NFTMarketplaceModule#NFTMarketplace - 0xd0F84d1194fd7a930072B1a54bF145E62bA99f53

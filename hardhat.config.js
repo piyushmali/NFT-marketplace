@@ -12,7 +12,6 @@ module.exports = {
     }
   },
   networks: {
-    hardhat: {},
     amoy: {
       url: process.env.AMOY_RPC_URL,
       accounts: [process.env.PRIVATE_KEY]
