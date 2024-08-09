@@ -1,6 +1,6 @@
 # NFT Marketplace
 
-**Deployed Addresses**
+**Deployed and Verified Addresses**
 
 - [MyNFT Contract](https://www.oklink.com/amoy/address/0xdE7716eC9738330b0e05Eea6aB1F052fd0846864/contract): `0xdE7716eC9738330b0e05Eea6aB1F052fd0846864`
 - [NFT Marketplace Contract](https://www.oklink.com/amoy/address/0x5eb8738ae8e23ea7c1d6e09e13037d87bb7f9466/contract): `0x5Eb8738aE8E23EA7C1D6e09E13037D87bb7F9466`
