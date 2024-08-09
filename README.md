@@ -14,9 +14,6 @@ A decentralized marketplace for trading ERC721 NFTs.
 - dotenv (v10.0.0 or later)
 - Alchemy Account (for RPC URL)
 - Oklink Account (for API key and contract verification)
-- @nomicfoundation/hardhat-toolbox (latest version)
-- @nomicfoundation/hardhat-verify (latest version)
-- @openzeppelin/hardhat-upgrades (latest version)
 
 ## Setup
 
